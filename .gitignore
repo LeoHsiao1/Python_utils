@@ -2,3 +2,6 @@
 .settings
 
 
+/__pycache__
+/build
+/dist
