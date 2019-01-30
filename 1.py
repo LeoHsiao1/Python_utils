@@ -1,43 +1,39 @@
-class Test:
-    a = 0
-    b = 0
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-        print("initial completed.")
+class Person:
+    num = 0  # 创建类变量num，该语句不能省略，因为类变量必须在函数外创建
 
-    def fun1(self, a=a, b=b):  # 这里表示如果调用方法fun1()时没有传入实参a、b，就默认使用类变量a、b的值
-        print(a, b)
-        print(self.a, self.b)  # 在函数内的作用域不能直接访问外部的类变量，要通过self指针获得类变量的引用
+    def __new__(cls, *args):
+        cls.num += 1  # 把类变量num的值加一，这里可以改为Person.num，但是直接用num就会报错说找不到
+        return super().__new__(cls)
 
-    def fun2(self):
-        pass
+    def setNum(self, n):  # 定义普通方法
+        self.num = n  # 创建实例变量num，并设置它的值
+
+    def getNum(self):  # 定义普通方法
+        return self.num  # 获得实例变量num的值
 
 
-t1 = Test(a=1, b=2)
+class Man(Person):
+    @classmethod
+    def class_getNum(cls):  # 定义类方法
+        return cls.num
 
-# t1.fun1()
-
-class Test:
-    def __str__(self):
-        return "__str__"
-
-    def __repr__(self):
-        return "__repr__"
-
-    def __sub__(self, other):
-        return 0 - other
-
-    def __rsub__(self, other):
-        return other - 0
-
-    def __len__(self):
-        return 0
-
-# t1 = Test2()
-# t1
-# str(t1)
-# print(t1)
+    @staticmethod  # 定义静态方法
+    def static_getNum():
+        return Man.class_getNum()
 
 
+""" class Person:
+    num = 0
 
+
+class Man(Person):
+    pass
+
+
+class Person:
+    num = 0
+    name = ""
+
+
+print(id(Person.num), id(Man.num))
+print(Person.num, Man.num) """
