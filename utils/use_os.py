@@ -13,8 +13,7 @@ def searchFile(path, suffix=None, depth=-1, logger=print):
     """
     # 检查输入的参数是否有效
     if not os.path.isdir(path):
-        raise ValueError(
-            "searchFile() argument 'path' must be a existing directory name.")
+        raise ValueError("'path' must be an existing directory.")
 
     # 将需要循环执行的语句放在内层函数中
     def __searchFile(path, suffix, depth):

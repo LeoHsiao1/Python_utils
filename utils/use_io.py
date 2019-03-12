@@ -109,3 +109,25 @@ def repeat(repeat=0, logger=print):
 # @repeat(repeat=3)
 # def fun1(x=None):
 #     print(x - 1)
+
+
+def creat_logger(name, level="INFO"):
+    """ 使用logging模块创建日志器，进行设置时需要手动修改该函数的代码。 """
+    import logging
+    filename = name + time.strftime("_%Y%m%d", time.localtime()) + ".log"
+    handler = logging.FileHandler(filename)    # 创建一个处理器
+    handler.setLevel(logging.DEBUG)            # 设置处理器的日志级别
+    formatter = logging.Formatter(
+        fmt="{asctime} - {levelname:5} - {threadName:20} --> {message}", style='{')
+    handler.setFormatter(formatter)            # 设置该handler的格式器
+
+    console_handler = logging.StreamHandler()  # 创建一个StreamHandler
+    console_handler.setFormatter(formatter)
+    console_handler.setLevel(logging.INFO)
+
+    logger = logging.getLogger(name)           # 创建一个日志器
+    logger.setLevel(level)                     # 设置日志器的级别
+    logger.addHandler(handler)                 # 为该日志器添加一个处理器
+    logger.addHandler(console_handler)
+
+    return logger

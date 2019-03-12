@@ -123,3 +123,4 @@
  # PyBuilder
 
  target/
+/*.spec
