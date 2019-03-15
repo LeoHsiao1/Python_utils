@@ -2,7 +2,10 @@ import threading
 
 import matplotlib.pyplot as plt
 
-from utils.use_time import Timer
+print(__file__)
+print(__name__)
+
+from .use_time import Timer
 
 
 class DynamicPlot(threading.Thread):

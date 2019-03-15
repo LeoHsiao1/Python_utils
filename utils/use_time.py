@@ -1,6 +1,8 @@
 import time
 import threading
 
+print(__file__)
+print(__name__)
 
 class _Clock:
     """
