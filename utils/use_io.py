@@ -42,7 +42,7 @@ class Inputs:
                 print("输入的不是有效目录！")
 
 
-def show_text(text, delay=0):
+def show_text(text, delay= 0):
     """ 在DOS窗口中显示文本text，显示每个字符的间隔时长为delay """
     for line in text:
         for word in line:
