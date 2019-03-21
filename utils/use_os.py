@@ -1,15 +1,20 @@
+"""
+实现一些基于os模块的功能。
+  def `searchFile`
+"""
+
 import os
 
 
 def searchFile(path, suffix=None, depth=-1, logger=print):
     """
-    在目录path下检索所有符合要求的文件，把它们的绝对地址保存成一个
+    在目录`path`下检索所有符合要求的文件，把它们的绝对地址保存成一个
     list返回（用户自行筛选文件名）。如果检索结果为空，则返回值为 [ ] 。
-     path    : str，一个在系统中存在的目录名。
-     suffix  : str，文件的后缀名，不区分大小写。默认不考虑后缀名，即
-     检索所有类型的文件。
-     depth   : int，最多检索depth层子目录。depth为负数时检索无限层。
-     logger  : callable，记录异常信息的函数名。
+      path    : str，一个在系统中存在的目录名。
+      suffix  : str，文件的后缀名，不区分大小写。默认不考虑后缀名，即
+      检索所有类型的文件。
+      depth   : int，最多检索depth层子目录。depth为负数时检索无限层。
+      logger  : callable，记录异常信息的函数名。
     """
     # 检查输入的参数是否有效
     if not os.path.isdir(path):

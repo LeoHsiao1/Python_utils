@@ -1,11 +1,22 @@
+"""
+实现一些与终端交互、读写文件、记录日志的功能。
+  class `Inputs`
+  def `show_text`
+  def `read_csv`
+  def `write_csv`
+  def `repeat`
+  def `creat_logger`
+"""
+
 import os
 import time
-import sys
-import traceback
 
 
 class Inputs:
-    """ 提供一些从终端获取用户输入的静态方法。 """
+    """
+    提供一些从终端获取用户输入的静态方法。
+      - 可在外部创建该类的变量，暂存一些输入的数据。
+    """
 
     @staticmethod
     def input_int(tip_str='', repeat=True):
@@ -42,8 +53,9 @@ class Inputs:
                 print("输入的不是有效目录！")
 
 
-def show_text(text, delay= 0):
+def show_text(text, delay=0):
     """ 在DOS窗口中显示文本text，显示每个字符的间隔时长为delay """
+    import sys
     for line in text:
         for word in line:
             print(word, end='')  # 逐个字显示
@@ -55,9 +67,9 @@ def show_text(text, delay= 0):
 
 def read_csv(file, *args, **kwargs):
     """
-    基于csv模块，从一个csv文件中读取数据，并将每行数据转换成list格式。
-     · 基于csv模块。 
-     · 该函数的参数列表与open()相同。 
+    从一个csv文件中读取数据，并将每行数据转换成list格式。
+      - 基于csv模块。
+      - 该函数的参数列表与open()相同。
     """
     import csv
     result = []
@@ -75,7 +87,7 @@ def read_csv(file, *args, **kwargs):
 def write_csv(data, file, mode="w", newline='', **kwargs):
     """ 
     将数据转换成csv格式，再保存到指定文件中。
-     · 基于csv模块。 
+      - 基于csv模块。
     """
     import csv
     with open(file, mode, newline=newline, **kwargs) as f:
@@ -85,10 +97,12 @@ def write_csv(data, file, mode="w", newline='', **kwargs):
 
 def repeat(repeat=0, logger=print):
     """
-    当函数因为异常而中断运行时，最多重复执行repeat次。
-    repeat为负数时重复执行无限次，直到函数正常结束。
-    logger : 记录异常信息的函数名。
+    一个装饰器。当函数因为异常而中断运行时，最多重复执行repeat次。
+      `repeat`为负数时重复执行无限次，直到函数正常结束。
+      `logger`是记录异常信息的函数名。
     """
+    import traceback
+    
     def __decorator(func):
         def __wrapper(*args, **kwargs):
             try:
@@ -108,25 +122,31 @@ def repeat(repeat=0, logger=print):
 # # sample：
 # @repeat(repeat=3)
 # def fun1(x=None):
-#     print(x - 1)
+#     print(x  - 1)
 
 
 def creat_logger(name, level="INFO"):
     """ 使用logging模块创建日志器，进行设置时需要手动修改该函数的代码。 """
     import logging
+
+    # 设置日志的文件名
     filename = name + time.strftime("_%Y%m%d", time.localtime()) + ".log"
-    handler = logging.FileHandler(filename)    # 创建一个处理器
-    handler.setLevel(logging.DEBUG)            # 设置处理器的日志级别
+
+    # 创建一个日志处理器
+    handler = logging.FileHandler(filename)
+    handler.setLevel("DEBUG")
     formatter = logging.Formatter(
-        fmt="{asctime} - {levelname:5} - {threadName:20} --> {message}", style='{')
+        fmt="{asctime}  - {levelname:5}  - {threadName:20} --> {message}", style='{')
     handler.setFormatter(formatter)            # 设置该handler的格式器
 
-    console_handler = logging.StreamHandler()  # 创建一个StreamHandler
+    # 创建一个将日志输出到终端的日志处理器
+    console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
-    console_handler.setLevel(logging.INFO)
+    console_handler.setLevel("INFO")
 
-    logger = logging.getLogger(name)           # 创建一个日志器
-    logger.setLevel(level)                     # 设置日志器的级别
+    # 创建一个日志器
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
     logger.addHandler(handler)                 # 为该日志器添加一个处理器
     logger.addHandler(console_handler)
 

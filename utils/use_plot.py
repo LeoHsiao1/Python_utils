@@ -1,9 +1,11 @@
+"""
+实现一些画图的功能。
+  class `DynamicPlot`
+"""
+
 import threading
 
 import matplotlib.pyplot as plt
-
-print(__file__)
-print(__name__)
 
 from .use_time import Timer
 
@@ -11,9 +13,9 @@ from .use_time import Timer
 class DynamicPlot(threading.Thread):
     """
     用于显示一个图表并实时刷新。
-     · 横轴为启动时间，从0开始计时。
-     · 每次调用add()时输入一个值，会绘制出一个新点，其横坐标为当前时间、纵坐标为y
-     · 绘制一个新点之后，会用一条线段连接上一个点与新点。也可不显示线段，改为散点图。
+      - 横轴为启动时间，从0开始计时。
+      - 每次调用add()时输入一个值，会绘制出一个新点，其横坐标为当前时间、纵坐标为y。
+      - 绘制一个新点之后，会用一条线段连接上一个点与新点。也可不显示线段，改为散点图。
     """
     instance = None
 
@@ -26,7 +28,7 @@ class DynamicPlot(threading.Thread):
         threading.Thread.__init__(self, *args, **kwargs)
         self._title = title
         self.name = title
-        self._xlabel = "time (s)"
+        self._xlabel = "Run Time (s)"
         self._ylabel = ylabel
         self._askToStop = False
         self._dots = []
@@ -53,7 +55,8 @@ class DynamicPlot(threading.Thread):
                 dots = self._dots
                 self._dots = []
                 _dots = list(zip(*dots))
-                plt.plot(_dots[0], _dots[1], color="blue", linestyle="", marker=".")
+                plt.plot(_dots[0], _dots[1], color="blue",
+                         linestyle="", marker=".")
                 # 每次循环绘制的是一条新线段，颜色随机，这里给它们设置统一的颜色
                 plt.pause(0.1)
 
@@ -66,7 +69,7 @@ class DynamicPlot(threading.Thread):
         self._askToStop = True
 
 
-""" sample """
+# sample
 if __name__ == "__main__":
     p1 = DynamicPlot("Communication Delay", "delay")
     p1.show()
