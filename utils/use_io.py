@@ -1,7 +1,7 @@
 """
 实现一些与终端交互、读写文件、记录日志的功能。
   class `Inputs`
-  def `show_text`
+  def `print_text`
   def `read_csv`
   def `write_csv`
   def `repeat`
@@ -53,7 +53,7 @@ class Inputs:
                 print("输入的不是有效目录！")
 
 
-def show_text(text, delay=0):
+def print_text(text, delay=0):
     """ 在DOS窗口中显示文本text，显示每个字符的间隔时长为delay """
     import sys
     for line in text:
@@ -84,7 +84,7 @@ def read_csv(file, *args, **kwargs):
     return result
 
 
-def write_csv(data, file, mode="w", newline='', **kwargs):
+def write_csv(data, file, mode='w', newline='', **kwargs):
     """ 
     将数据转换成csv格式，再保存到指定文件中。
       - 基于csv模块。
@@ -102,7 +102,7 @@ def repeat(repeat=0, logger=print):
       `logger`是记录异常信息的函数名。
     """
     import traceback
-    
+
     def __decorator(func):
         def __wrapper(*args, **kwargs):
             try:
