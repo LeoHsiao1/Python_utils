@@ -4,6 +4,8 @@
   def `print_text`
   def `read_csv`
   def `write_csv`
+  def `read_xlsx`
+  def `write_xlsx`
   def `repeat`
   def `creat_logger`
 """
@@ -53,6 +55,36 @@ class Inputs:
                 print("输入的不是有效目录！")
 
 
+def repeat(repeat=0, logger=print):
+    """
+    一个装饰器。当函数抛出异常时，最多重复执行repeat次，直到函数正常结束。
+      `repeat`为负数时重复执行无限次，直到函数正常结束。
+      `logger`是记录异常信息的函数名。
+    """
+    import traceback
+    
+    def __decorator(func):
+        def __wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                # logger(traceback.format_exc())
+                logger(str(e))
+                nonlocal repeat
+                if repeat != 0:
+                    repeat -= 1
+                    __wrapper(*args, **kwargs)
+                else:
+                    raise
+        return __wrapper
+    return __decorator
+
+# # sample：
+# @repeat(repeat=3)
+# def fun1(x=None):
+#     print(x  - 1)
+
+
 def print_text(text, delay=0):
     """ 在DOS窗口中显示文本text，显示每个字符的间隔时长为delay """
     import sys
@@ -95,34 +127,43 @@ def write_csv(data, file, mode='w', newline='', **kwargs):
         csv_writer.writerows(data)  # 写入多行
 
 
-def repeat(repeat=0, logger=print):
+def read_xlsx(file, read_only=True, *args, **kwargs):
     """
-    一个装饰器。当函数因为异常而中断运行时，最多重复执行repeat次。
-      `repeat`为负数时重复执行无限次，直到函数正常结束。
-      `logger`是记录异常信息的函数名。
+    读取一个xlsx表格中的全部数据，保存为一个字典返回。
+      - 该字典的key为xlsx中一个sheet的名字，value为该sheet的所有行组成的list。
+      - 该函数的参数与 openpyxl.load_workbook() 相同。
+      - read_only=True 表示以只读模式打开，读取速度更快。
     """
-    import traceback
+    from openpyxl import load_workbook
+    wb = load_workbook(file, read_only, *args, **kwargs)
+    data_dict = {}
+    # 遍历xlsx中的每个sheet，遍历每个sheet中的每行数据，保存为字典类型
+    for name in wb.sheetnames:
+        data_dict[name] = [row for row in wb[name].values]
+    wb.close()
+    return data_dict
 
-    def __decorator(func):
-        def __wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                # logger(traceback.format_exc())
-                logger(str(e))
-                nonlocal repeat
-                if repeat != 0:
-                    repeat -= 1
-                    __wrapper(*args, **kwargs)
-                else:
-                    raise
-        return __wrapper
-    return __decorator
 
-# # sample：
-# @repeat(repeat=3)
-# def fun1(x=None):
-#     print(x  - 1)
+def write_xlsx(data_dict, file, write_only=True):
+    """
+    把一个字典写入xlsx表格。
+      - 如果输入的data不是字典类型，会先转换成 key="Sheet1" 的字典。
+      - 该字典的key为xlsx中一个sheet的名字，value为该sheet的所有行组成的list。
+      - write_only=True 表示以只写模式打开，读取速度更快。
+    """
+    from openpyxl import Workbook
+
+    if not isinstance(data_dict, dict):
+        data_dict = {"Sheet1": data_dict}
+
+    wb = Workbook(data_dict, write_only)
+    # 遍历data_dict中的每个value，遍历每个value的每行数据，保存为xlsx表格
+    for k, v in data_dict.items():
+        ws = wb.create_sheet(k)
+        for row in v:
+            ws.append(row)
+    wb.save(file)
+    wb.close()
 
 
 def creat_logger(name, level="INFO"):
