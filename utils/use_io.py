@@ -97,7 +97,7 @@ def print_text(text, delay=0):
             sys.stdout.flush()
 
 
-def read_csv(file, *args, **kwargs):
+def read_csv(filename, *args, **kwargs):
     """
     从一个csv文件中读取数据，并将每行数据转换成list格式。
       - 基于csv模块。
@@ -105,29 +105,29 @@ def read_csv(file, *args, **kwargs):
     """
     import csv
     result = []
-    with open(file, *args, **kwargs) as f:
+    with open(filename, *args, **kwargs) as f:
         csv_reader = csv.reader(f)   # 在一个文件流f上创建csv阅读器
         try:
             for line in csv_reader:  # 迭代csv_reader的内容
                 result.append(line)
         except csv.Error as e:       # 捕捉读取csv文件时的异常
             raise OSError("A reading error in file {}, line {}:\n{}"
-                          .format(file, csv_reader.line_num, e))
+                          .format(filename, csv_reader.line_num, e))
     return result
 
 
-def write_csv(data, file, mode='w', newline='', **kwargs):
+def write_csv(data, filename, mode='w', newline='', **kwargs):
     """ 
     将数据转换成csv格式，再保存到指定文件中。
       - 基于csv模块。
     """
     import csv
-    with open(file, mode, newline=newline, **kwargs) as f:
+    with open(filename, mode, newline=newline, **kwargs) as f:
         csv_writer = csv.writer(f)  # 在文件流f上创建一个csv写入器
         csv_writer.writerows(data)  # 写入多行
 
 
-def read_xlsx(file, read_only=True, *args, **kwargs):
+def read_xlsx(filename, read_only=True, *args, **kwargs):
     """
     读取一个xlsx表格中的全部数据，保存为一个字典返回。
       - 该字典的key为xlsx中一个sheet的名字，value为该sheet的所有行组成的list。
@@ -135,7 +135,7 @@ def read_xlsx(file, read_only=True, *args, **kwargs):
       - read_only=True 表示以只读模式打开，读取速度更快。
     """
     from openpyxl import load_workbook
-    wb = load_workbook(file, read_only, *args, **kwargs)
+    wb = load_workbook(filename, read_only, *args, **kwargs)
     data_dict = {}
     # 遍历xlsx中的每个sheet，遍历每个sheet中的每行数据，保存为字典类型
     for name in wb.sheetnames:
@@ -144,7 +144,7 @@ def read_xlsx(file, read_only=True, *args, **kwargs):
     return data_dict
 
 
-def write_xlsx(data_dict, file, write_only=True):
+def write_xlsx(data_dict, filename, write_only=True):
     """
     把一个字典写入xlsx表格。
       - 如果输入的data不是字典类型，会先转换成 key="Sheet1" 的字典。
@@ -162,7 +162,7 @@ def write_xlsx(data_dict, file, write_only=True):
         ws = wb.create_sheet(k)
         for row in v:
             ws.append(row)
-    wb.save(file)
+    wb.save(filename)
     wb.close()
 
 
