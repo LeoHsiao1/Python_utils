@@ -49,8 +49,9 @@ class DynamicPlot(threading.Thread):
         plt.ion()  # 打开交互模式
 
         while not self._askToStop:
+            # 如果没有输入新点，就保持显示，否则显示所有新点
             if len(self._dots) == 0:
-                plt.pause(0.1)  # 当没有输入新点时，保持显示
+                plt.pause(0.1)
             else:
                 dots = self._dots
                 self._dots = []

@@ -1,16 +1,15 @@
 """
-实现一些与终端交互、读写文件、记录日志的功能。
+实现一些与终端交互、读写文件的功能。
   class `Inputs`
   def `print_text`
   def `read_csv`
   def `write_csv`
   def `read_xlsx`
   def `write_xlsx`
-  def `repeat`
-  def `creat_logger`
 """
 
 import os
+import sys
 import time
 
 
@@ -21,33 +20,33 @@ class Inputs:
     """
 
     @staticmethod
-    def input_int(tip_str='', repeat=True):
-        while repeat:
+    def input_int(tip_str='', retry=True):
+        while retry:
             try:
                 return int(input(tip_str))
             except:
                 print("输入的不是整数！")
 
     @staticmethod
-    def input_positive_int(tip_str='', repeat=True):
-        while repeat:
-            num = Inputs.input_int(tip_str, repeat)
+    def input_positive_int(tip_str='', retry=True):
+        while retry:
+            num = Inputs.input_int(tip_str, retry)
             if num > 0:
                 return num
             else:
                 print("输入的不是正整数！")
 
     @staticmethod
-    def input_real_num(tip_str='', repeat=True):
-        while repeat:
+    def input_real_num(tip_str='', retry=True):
+        while retry:
             try:
                 return float(input(tip_str))
             except:
                 print("输入的不是整数或浮点数！")
 
     @staticmethod
-    def input_path(tip_str='', repeat=True):
-        while repeat:
+    def input_path(tip_str='', retry=True):
+        while retry:
             path = input(tip_str)
             if os.path.isdir(path):
                 return path
@@ -55,39 +54,8 @@ class Inputs:
                 print("输入的不是有效目录！")
 
 
-def repeat(repeat=0, logger=print):
-    """
-    一个装饰器。当函数抛出异常时，最多重复执行repeat次，直到函数正常结束。
-      `repeat`为负数时重复执行无限次，直到函数正常结束。
-      `logger`是记录异常信息的函数名。
-    """
-    import traceback
-    
-    def __decorator(func):
-        def __wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                # logger(traceback.format_exc())
-                logger(str(e))
-                nonlocal repeat
-                if repeat != 0:
-                    repeat -= 1
-                    __wrapper(*args, **kwargs)
-                else:
-                    raise
-        return __wrapper
-    return __decorator
-
-# # sample：
-# @repeat(repeat=3)
-# def fun1(x=None):
-#     print(x  - 1)
-
-
 def print_text(text, delay=0):
     """ 在DOS窗口中显示文本text，显示每个字符的间隔时长为delay """
-    import sys
     for line in text:
         for word in line:
             print(word, end='')  # 逐个字显示
@@ -164,31 +132,3 @@ def write_xlsx(data_dict, filename, write_only=True):
             ws.append(row)
     wb.save(filename)
     wb.close()
-
-
-def creat_logger(name, level="INFO"):
-    """ 使用logging模块创建日志器，进行设置时需要手动修改该函数的代码。 """
-    import logging
-
-    # 设置日志的文件名
-    filename = name + time.strftime("_%Y%m%d", time.localtime()) + ".log"
-
-    # 创建一个日志处理器
-    handler = logging.FileHandler(filename)
-    handler.setLevel("DEBUG")
-    formatter = logging.Formatter(
-        fmt="{asctime}  - {levelname:5}  - {threadName:20} --> {message}", style='{')
-    handler.setFormatter(formatter)            # 设置该handler的格式器
-
-    # 创建一个将日志输出到终端的日志处理器
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-    console_handler.setLevel("INFO")
-
-    # 创建一个日志器
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)                 # 为该日志器添加一个处理器
-    logger.addHandler(console_handler)
-
-    return logger

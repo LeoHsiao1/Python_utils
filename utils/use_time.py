@@ -128,12 +128,14 @@ class Schedule(threading.Thread):
 
         # 保存该任务
         task = []
-        task.append(self._get_time() + countDown)  # 准备在指定时刻执行该任务
+        # 准备在指定时刻执行该任务
+        task.append(self._get_time() + countDown)
         task.append(func)
         task.append(args)
         task.append(kwargs)
         self._schedule.append(task)
-        self._schedule.sort(key=lambda task: task[0])  # 将任务表按时间戳的大小排序
+        # 将任务表按时间戳的大小排序
+        self._schedule.sort(key=lambda task: task[0])
 
     def _doTask(self):
         """ 检查任务表中各项任务的时间，判断是否要执行它。 """
@@ -151,7 +153,8 @@ class Schedule(threading.Thread):
             else:
                 break  # 如果该任务的时间戳大于当前时间，就提前结束遍历
 
-        del self._schedule[:i]  # 删除过时的任务
+        # 删除过时的任务
+        del self._schedule[:i]
 
     def run(self):
         """ 线程循环运行的内容 """
