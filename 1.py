@@ -26,10 +26,3 @@ import requests
 #     with open(filename, 'wb') as f:
 #         f.write(r.content)
 
-from utils.use_io import read_xlsx, write_xlsx
-# data = {"1": [list("hello"), list("world")],
-#         "2": [list("hello"), list("world")]}
-# write_xlsx(data, "1.xlsx")
-data = read_xlsx("1.xlsx")
-for k, v in data.items():
-    print(k, v)
