@@ -67,3 +67,13 @@ def retry(count=0, log=print):
                     raise
         return __wrapper
     return __decorator
+
+
+def test_run(func, *args, **kwargs):
+    """ 测试运行一个函数，出错时打印异常信息。 """
+    try:
+        func(*args, **kwargs)
+    except:
+        traceback.print_exc()
+    finally:
+        os.system("pause")  # 运行之后保持终端的显示

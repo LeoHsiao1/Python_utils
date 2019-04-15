@@ -26,3 +26,10 @@ import requests
 #     with open(filename, 'wb') as f:
 #         f.write(r.content)
 
+
+from utils.use_os import test_run
+
+
+test_run(print, "Hello World!")
+
+test_run(eval, "None + 1")
