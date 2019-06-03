@@ -1,35 +1,12 @@
-import re
+import hashlib
 
-import requests
+h = hashlib.sha256()    # 生成一个hash器
+h.update("Hello".encode())      # 输入要hash的内容（必须转换成bytes类型）
+h.update("World".encode())
+h.digest()              # 获取hash结果（也是bytes类型）
 
+# 简化成一步
+hashlib.sha256(b"Hello World").digest()
 
-# # 向一个网址发出HTTP请求
-# url = "https:"+"//www.baidu.com"
-# r = requests.get(url, timeout=1)
-# if r.status_code != 200:
-#     raise RuntimeError
-# r.encoding = 'utf-8'
-# html = r.text
-
-# # 从html中筛选png图片的链接
-# # （html中的目标数据为 src=//www.baidu.com/img/bd_logo1.png）
-# result = re.findall(r"src=(.*\.png)", html)
-# print(result)
-
-# # 合成图片的有效链接，下载到本地
-# for i in result:
-#     url = "https:" + i
-#     filename = i.split('/')[-1]
-#     r = requests.get(url, timeout=1)
-#     if r.status_code != 200:
-#         raise RuntimeError
-#     with open(filename, 'wb') as f:
-#         f.write(r.content)
-
-
-from utils.use_os import test_run
-
-
-test_run(print, "Hello World!")
-
-test_run(eval, "None + 1")
+# 通过对原始口令加一个复杂字符串来实现，俗成“加盐
+# 加盐、加用户名
