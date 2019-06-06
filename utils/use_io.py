@@ -45,7 +45,8 @@ class Inputs:
         while retry:
             path = input(tip_str)
             if os.path.isdir(path):
-                return path
+                # 如果该path存在，则转换成正常格式的绝对地址
+                return os.path.abspath(os.path.normpath(path))
             else:
                 print("输入的不是有效目录！")
 
