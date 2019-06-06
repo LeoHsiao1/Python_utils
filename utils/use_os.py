@@ -4,10 +4,10 @@ import traceback
 
 def searchFile(path, suffix=None, depth=-1, log=print):
     """
-    在目录`path`下检索所有符合要求的文件，把它们的绝对地址保存成一个
-    list返回（用户自行筛选文件名）。如果检索结果为空，则返回值为 [ ] 。
+    在目录`path`下检索所有文件，把符合要求的文件名的绝对地址保存成一个list返回。
+    如果检索结果为空，则返回值为 [ ] 。
       `path`: 一个在系统中存在的目录名
-      `suffix`: 文件的后缀名，不区分大小写。默认不区分后缀名
+      `suffix`: 文件的后缀名，区分大小写，可以是一个字符串或字符串的元组。默认不区分后缀名
       `depth`: 最多检索depth层子目录。depth为负数时检索无限层
       `log`: 记录异常信息的函数名
     """
@@ -20,6 +20,7 @@ def searchFile(path, suffix=None, depth=-1, log=print):
         try:
             # 获取目录path下的文件列表
             dir_list = os.listdir(path)
+
         # 可能会遇到没有访问权限的文件夹，这里把异常处理掉，以免打断程序运行
         except PermissionError as e:
             log("PermissionError: {}".format(e))
@@ -38,7 +39,7 @@ def searchFile(path, suffix=None, depth=-1, log=print):
                     file_list.extend(sub_list)  # 在file_list末尾增加一个列表
 
             # 如果子路径是一个文件，就判断后缀名是否正确，如果没输入suffix就不考虑后缀名
-            elif suffix == None or suffix.lower() == sub_path[sub_path.rfind('.'):].lower():
+            elif suffix == None or sub_path.endswith(suffix):
                 file_list.append(sub_path)  # 在file_list末尾增加一个字符串
 
         return file_list
