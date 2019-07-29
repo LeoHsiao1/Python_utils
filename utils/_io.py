@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 """
-实现一些与终端交互的功能。
-  class `Inputs`
-  def `print_text`
+与终端交互。
+  - class `Inputs`
+  - def `print_text`
 """
 
 import os
@@ -57,6 +58,5 @@ def print_text(text, delay=0):
         for word in line:
             print(word, end='')  # 逐个字显示
             time.sleep(delay)
-            # 每打印一个字符就刷新一次stdout，
-            # 否则缓存区累积了一行才会刷新stdout
+            # 每打印一个字符就刷新一次stdout，否则缓存区累积了一行才会显示
             sys.stdout.flush()

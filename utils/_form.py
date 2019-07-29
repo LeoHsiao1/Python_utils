@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-实现一些读写表格的功能。
-  def `read_csv`
-  def `write_csv`
-  def `read_xlsx`
-  def `write_xlsx`
+读写csv、xlsx表格。
+  - def `read_csv`
+  - def `write_csv`
+  - def `read_xlsx`
+  - def `write_xlsx`
 """
 
 

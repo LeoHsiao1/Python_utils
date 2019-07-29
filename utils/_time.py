@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-实现一些关于计时、定时任务的功能。
-  class `Clock`
-  class `Timer`
-  class `Schedule`
-  class `SimpleThread`
+获取时间、计时、定时任务。
+  - class `Clock`
+  - class `Timer`
+  - class `Schedule`
+  - class `SimpleThread`
 """
 
 import time
@@ -12,7 +13,7 @@ import threading
 
 class Clock:
     """
-    自定义的时钟类，用于获取几种不同格式的当前时间。
+    一个时钟类，用于获取几种不同格式的当前时间。
       `decimal`: 设置time_float的精度，控制其保留几位小数。
       `time_diff`: 设置该时钟与UTC+0时区的时差。如果不设置，会自动采用
       本地时区。
@@ -50,7 +51,7 @@ class Clock:
 
 class Timer(Clock):
     """
-    自定义的计时器，像秒表一样，可以随时查看当前计时、暂停计时、继续计时。
+    一个计时器，像秒表，可以随时查看当前计时、暂停计时、继续计时。
       - 继承_Clock类，调用其方法来获取当前时间、控制时间精度。
       - 创建一个计时器之后，它就会开始计时，但并不需要创建一个线程。
     """
@@ -92,7 +93,7 @@ class Timer(Clock):
 
 class Schedule(threading.Thread):
     """
-    自定义的定时任务表，添加第一个定时任务后就创建一个线程，开始循环检查
+    一个定时任务表，添加第一个定时任务后就创建一个线程，开始循环检查
     是否执行任务表中的任务。
       - 调用addTask()添加一项定时任务。
       - 调用stop()终止该线程。

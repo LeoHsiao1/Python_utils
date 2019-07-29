@@ -1,13 +1,14 @@
+# -*- coding: utf-8 -*-
 """
-实现一些画图的功能。
-  class `DynamicPlot`
+关于画图。
+  - class `DynamicPlot`
 """
 
 import threading
 
 import matplotlib.pyplot as plt
 
-from .use_time import Timer
+from ._time import Timer
 
 
 class DynamicPlot(threading.Thread):

@@ -1,15 +1,22 @@
+# -*- coding: utf-8 -*-
+"""
+基于os模块。
+  - def `searchFile`
+  - def `retry`
+  - def `test_run`
+"""
+
 import os
 import traceback
 
 
 def searchFile(path, suffix=None, depth=-1, log=print):
     """
-    在目录`path`下检索所有文件，把符合要求的文件名的绝对地址保存成一个list返回。
-    如果检索结果为空，则返回值为 [ ] 。
-      `path`: 一个在系统中存在的目录名
-      `suffix`: 文件的后缀名，区分大小写，可以是一个字符串或字符串的元组。默认不区分后缀名
-      `depth`: 最多检索depth层子目录。depth为负数时检索无限层
-      `log`: 记录异常信息的函数名
+    在`path`目录下递归检索符合`suffix`后缀名的文件，返回这些文件的绝对地址列表。
+      - `path`: 一个系统目录。
+      - `suffix`: 文件的后缀名，区分大小写。可以是一个字符串，或字符串的元组。默认不区分后缀名。
+      - `depth`: 表示最多检索到第几层子目录。默认检索无数层。
+      - `log`: 记录日志的函数名。
     """
     # 检查输入的参数是否有效
     if not os.path.isdir(path):
@@ -18,7 +25,6 @@ def searchFile(path, suffix=None, depth=-1, log=print):
     # 将需要循环执行的语句放在内层函数中
     def __searchFile(path, suffix, depth):
         try:
-            # 获取目录path下的文件列表
             dir_list = os.listdir(path)
 
         # 可能会遇到没有访问权限的文件夹，这里把异常处理掉，以免打断程序运行
@@ -78,3 +84,7 @@ def test_run(func, *args, **kwargs):
         traceback.print_exc()
     finally:
         os.system("pause")  # 运行之后保持终端的显示
+
+
+if __name__ == "__main__":
+    _list = searchFile("D:\\", ".py")

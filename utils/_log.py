@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+记录日志。
+  - class `Logger`
+"""
+
 import time
 import logging
 
