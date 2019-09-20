@@ -60,7 +60,7 @@ class Timer(Clock):
         Clock.__init__(self, *args, **kwargs)
         self.record = []  # 记录每次使用的 (开始时刻,暂停时刻,计时时长)
         self.status = "initial"
-        self.go()
+        self.start()
 
     @property
     def count(self):
@@ -68,12 +68,12 @@ class Timer(Clock):
         count = 0
         for line in self.record:
             if line[2] == None:
-                count += self.time_float  - line[0]
+                count += self.time_float - line[0]
             else:
                 count += line[2]
         return round(count, self.decimal)
 
-    def go(self):
+    def start(self):
         """ 开始计时 """
         if self.status != "timing":
             self.record.append((self.time_float, None, None))
@@ -87,7 +87,7 @@ class Timer(Clock):
             self.record.remove(last_line)
             current_time = self.time_float
             self.record.append(
-                (last_line[0], current_time, round(current_time  - last_line[0], self.decimal)))
+                (last_line[0], current_time, round(current_time - last_line[0], self.decimal)))
             self.status = "paused"
 
 
@@ -95,15 +95,17 @@ class Schedule(threading.Thread):
     """
     一个定时任务表，添加第一个定时任务后就创建一个线程，开始循环检查
     是否执行任务表中的任务。
-      - 调用addTask()添加一项定时任务。
-      - 调用stop()终止该线程。
+      - 调用 addTask() 添加一项定时任务
+      - 调用 stop() 终止该线程
+      - 每隔 interval 秒判断一次是否执行任务
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, interval=0.1, *args, **kwargs):
         threading.Thread.__init__(self, *args, **kwargs)
         self._askToStop = False
         self._schedule = []  # 保存定时任务表
         self.status = "initial"
+        self.interval = interval
 
     def _get_time(self):
         """ 获取当前时间 """
@@ -161,6 +163,7 @@ class Schedule(threading.Thread):
         """ 线程循环运行的内容 """
         while not self._askToStop:
             self._doTask()
+            time.sleep(self.interval)
 
         # 结束时进行清理
         self.status == "stopped"
