@@ -7,11 +7,8 @@
 """
 
 def sort_dict(_dict):
-    """ 基于sorted()对字典排序，返回一个新字典。 """
-    result = {}
-    for k in sorted(_dict):
-        result[k] = _dict[k]
-    return result
+    """ 基于sorted()，按key对字典排序，返回一个新字典。 """
+    return dict(sorted(_dict.items(), key=lambda x: x[0]))
 
 
 def flat_key(layer):
