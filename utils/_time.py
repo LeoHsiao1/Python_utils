@@ -120,9 +120,9 @@ class Schedule(threading.Thread):
         """
         # 检查输入是否合法
         if not isinstance(countDown, (int, float)) or countDown <= 0:
-            raise ValueError("'countDown' must be a positive int or float.")
+            raise TypeError("'countDown' must be a positive int or float.")
         if not callable(func):
-            raise ValueError("'func' must be callable.")
+            raise TypeError("'func' must be callable.")
 
         # 第一次添加定时任务时创建一个新线程
         if self.status == "initial":

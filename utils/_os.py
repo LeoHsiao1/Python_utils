@@ -2,12 +2,9 @@
 """
 基于os模块。
   - def `searchFile`
-  - def `retry`
-  - def `test_run`
 """
 
 import os
-import traceback
 
 
 def searchFile(path, suffix=None, depth=-1, log=print):
@@ -51,39 +48,6 @@ def searchFile(path, suffix=None, depth=-1, log=print):
         return file_list
 
     return __searchFile(path, suffix, depth)
-
-
-def retry(count=0, log=print):
-    """
-    一个装饰器。当函数抛出异常时，最多重复执行count次，直到函数正常结束。
-      `count`:为负数时重复执行无限次，直到函数正常结束
-      `log`:记录异常信息的函数名
-    """
-    def __decorator(func):
-        def __wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                # log(traceback.format_exc())
-                log(str(e))
-                nonlocal count
-                if count != 0:
-                    count -= 1
-                    __wrapper(*args, **kwargs)
-                else:
-                    raise
-        return __wrapper
-    return __decorator
-
-
-def test_run(func, *args, **kwargs):
-    """ 测试运行一个函数，出错时打印异常信息。 """
-    try:
-        func(*args, **kwargs)
-    except:
-        traceback.print_exc()
-    finally:
-        os.system("pause")  # 运行之后保持终端的显示
 
 
 if __name__ == "__main__":
