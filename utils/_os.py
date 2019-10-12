@@ -1,19 +1,33 @@
 # -*- coding: utf-8 -*-
 """
 基于os模块。
+  - def `find_all_files`
   - def `searchFile`
 """
 
 import os
 
 
-def searchFile(path, suffix=None, depth=-1, log=print):
+def find_all_files(path: str = '.', onerror=print):
+    """
+    查找`path`目录及其子目录下的所有文件，返回一个生成器。每次迭代时遍历一个目录。
+      - `path`: 一个已存在的目录。
+      - `onerror`: 记录异常的函数名。
+    """
+    for basepath, dirnames, filenames in os.walk(path, onerror=onerror):
+        paths = []
+        for i in dirnames + filenames:
+            paths.append(os.path.join(basepath, i))
+        yield paths
+
+
+def searchFile(path: str, suffix: str = None, depth=-1, onerror=print) -> list:
     """
     在`path`目录下递归检索符合`suffix`后缀名的文件，返回这些文件的绝对地址列表。
-      - `path`: 一个系统目录。
+      - `path`: 一个已存在的目录。
       - `suffix`: 文件的后缀名，区分大小写。可以是一个字符串，或字符串的元组。默认不区分后缀名。
       - `depth`: 表示最多检索到第几层子目录。默认检索无数层。
-      - `log`: 记录日志的函数名。
+      - `onerror`: 记录异常的函数名。
     """
     # 检查输入的参数是否有效
     if not os.path.isdir(path):
@@ -26,7 +40,7 @@ def searchFile(path, suffix=None, depth=-1, log=print):
 
         # 可能会遇到没有访问权限的文件夹，这里把异常处理掉，以免打断程序运行
         except PermissionError as e:
-            log("PermissionError: {}".format(e))
+            onerror("PermissionError: {}".format(e))
             return -1  # 退出函数，不检索该目录
 
         # 开始检索
@@ -51,4 +65,7 @@ def searchFile(path, suffix=None, depth=-1, log=print):
 
 
 if __name__ == "__main__":
-    _list = searchFile("D:\\", ".py")
+    for paths in find_all_files("."):
+        print(paths)
+
+    searchFile("D:\\", ".py ")
