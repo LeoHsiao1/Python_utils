@@ -12,10 +12,11 @@ from functools import wraps
 from inspect import signature
 
 
-def debug(log=print):
+def debug(log=print, ignore_exception=False):
     """
-    当函数发生异常时，记录详细的异常信息，然后再抛出异常。
+    当函数发生异常时，记录详细的异常信息。
       - `log`：记录异常信息的函数名。
+      - `ignore_exception`：是否抛出该异常。
     """
     def decorator(func):
         @wraps(func)
@@ -24,6 +25,8 @@ def debug(log=print):
                 return func(*args, **kwargs)
             except:
                 log(traceback.format_exc())
+                if not ignore_exception:
+                    raise
         return wrapper
     return decorator
 
