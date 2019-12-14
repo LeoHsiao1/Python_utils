@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-基于os模块。
-  - def `find_all_files`
-  - def `searchFile`
-"""
-
 import os
 
 
@@ -13,6 +7,10 @@ def find_all_files(path: str = '.', onerror=print):
     查找`path`目录及其子目录下的所有文件，返回一个生成器。每次迭代时遍历一个目录。
       - `path`: 一个已存在的目录。
       - `onerror`: 记录异常的函数名。
+    
+    example:
+    >>> for paths in find_all_files("."):
+    >>>     print(paths)
     """
     for basepath, dirnames, filenames in os.walk(path, onerror=onerror):
         paths = []
@@ -21,13 +19,16 @@ def find_all_files(path: str = '.', onerror=print):
         yield paths
 
 
-def searchFile(path: str, suffix: str = None, depth=-1, onerror=print) -> list:
+def searchFile(path: str, suffix = None, depth=-1, onerror=print) -> list:
     """
     在`path`目录下递归检索符合`suffix`后缀名的文件，返回这些文件的绝对地址列表。
-      - `path`: 一个已存在的目录。
+      - `path`: 一个在系统中存在的目录。
       - `suffix`: 文件的后缀名，区分大小写。可以是一个字符串，或字符串的元组。默认不区分后缀名。
       - `depth`: 表示最多检索到第几层子目录。默认检索无数层。
       - `onerror`: 记录异常的函数名。
+
+    example:
+    >>> searchFile("D:\\", ".py ")
     """
     # 检查输入的参数是否有效
     if not os.path.isdir(path):
@@ -64,8 +65,18 @@ def searchFile(path: str, suffix: str = None, depth=-1, onerror=print) -> list:
     return __searchFile(path, suffix, depth)
 
 
-if __name__ == "__main__":
-    for paths in find_all_files("."):
-        print(paths)
+def locate_path(basedir: str, path: str) -> str:
+    """
+    Locate the `path` relative to `basedir`, returns its absolute path.
 
-    searchFile("D:\\", ".py ")
+    Sample:
+    >>> locate_path('/root/', './1.py')
+    '/root/1.py'
+    >>> locate_path('/root/', '../1.py')
+    '/1.py'
+    """
+    # Return the path if it is not a relative path
+    if not path.replace('\\', '/').startswith(('./','../')):
+        return path
+    # Return the located path
+    return os.path.abspath(os.path.join(basedir, path))
