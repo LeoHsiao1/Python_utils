@@ -79,7 +79,8 @@ def locate_path(basedir: str, path: str) -> str:
     '/1.py'
     """
     # Return the path if it is not a relative path
-    if not path.replace('\\', '/').startswith(('./','../')):
+    splited_path = path.replace('\\', '/').split('/')
+    if not splited_path[0] in ['.', '..']:
         return path
     # Return the located path
     return os.path.abspath(os.path.join(basedir, path))
