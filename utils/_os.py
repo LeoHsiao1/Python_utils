@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+扩展os模块的功能
+"""
 import os
 
 

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-获取时间、计时、定时任务。
-  - class `Clock`
-  - class `Timer`
-  - class `Schedule`
-  - class `SimpleThread`
+关于计时、定时任务。
 """
 
 import time

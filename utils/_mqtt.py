@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 """
 基于Python的第三方库paho-mqtt，与mqtt broker通信。
-  - class `MqttClient`
+需要安装：pip install paho-mqtt
 """
 
 import json

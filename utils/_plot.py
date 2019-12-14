@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 关于画图。
-  - class `DynamicPlot`
+需要安装：pip install matplotlib
 """
 
 import threading
