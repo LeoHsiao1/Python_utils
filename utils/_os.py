@@ -3,74 +3,73 @@
 扩展os模块的功能
 """
 import os
+import fnmatch
+import re
 
 
-def find_all_files(path: str = '.', onerror=print):
+def list_all_files(directory='.', onerror=print):
     """
-    查找`path`目录及其子目录下的所有文件，返回一个生成器。每次迭代时遍历一个目录。
-      - `path`: 一个已存在的目录。
-      - `onerror`: 记录异常的函数名。
+    Lists all files under the specified directory and its subdirectories. 
+    - `directory`: An existing directory.
+    - `onerror`: A callable param. it will be called if an exception occurs.
+
+    Work in generator mode. Process one directory at each iteration.
     
-    example:
-    >>> for paths in find_all_files("."):
+    Sample:
+    >>> for paths in list_all_files('.'):
     >>>     print(paths)
     """
-    for basepath, dirnames, filenames in os.walk(path, onerror=onerror):
-        paths = []
-        for i in dirnames + filenames:
-            paths.append(os.path.join(basepath, i))
-        yield paths
+    for basepath, dirnames, filenames in os.walk(directory, onerror=onerror):
+        path_list = []
+        for name in dirnames + filenames:
+            path_list.append(os.path.join(basepath, name))
+        yield path_list
 
 
-def searchFile(path: str, suffix = None, depth=-1, onerror=print) -> list:
+def find_file(directory='.', depth=-1, pattern=None, re_pattern=None, onerror=print) -> list:
     """
-    在`path`目录下递归检索符合`suffix`后缀名的文件，返回这些文件的绝对地址列表。
-      - `path`: 一个在系统中存在的目录。
-      - `suffix`: 文件的后缀名，区分大小写。可以是一个字符串，或字符串的元组。默认不区分后缀名。
-      - `depth`: 表示最多检索到第几层子目录。默认检索无数层。
-      - `onerror`: 记录异常的函数名。
+    Find some files and return their paths.
+    - `directory`: An existing directory.
+    - `depth`: The max depth for finding files. If its value is negative, the depth is infinite.
+    - `pattern`: Filter filename based on shell-style wildcards.
+    - `re_pattern`: Filter filename based on regular expressions.
+    - `onerror`: A callable param. it will be called if an exception occurs.
+    
+    Work in recursive mode. If there are thousands of files, the runtime may be several seconds.
 
-    example:
-    >>> searchFile("D:\\", ".py ")
+    Sample:
+    >>> find_file('.', pattern='*.py')
+    >>> find_file('.', re_pattern='.*.py')
     """
-    # 检查输入的参数是否有效
-    if not os.path.isdir(path):
-        raise ValueError("'path' must be an existing directory.")
+    if not os.path.isdir(directory):
+        raise ValueError("{} is not an existing directory.".format(directory))
 
-    # 将需要循环执行的语句放在内层函数中
-    def __searchFile(path, suffix, depth):
-        try:
-            dir_list = os.listdir(path)
+    try:
+        file_list = os.listdir(directory)
+    except PermissionError as e:    # Sometimes it does not have access to the directory
+        onerror("PermissionError: {}".format(e))
+        return -1
 
-        # 可能会遇到没有访问权限的文件夹，这里把异常处理掉，以免打断程序运行
-        except PermissionError as e:
-            onerror("PermissionError: {}".format(e))
-            return -1  # 退出函数，不检索该目录
+    path_list = []
+    for filename in file_list:
+        path = os.path.join(directory, filename)
+        if depth != 0 and os.path.isdir(path):
+            sub_list = find_file(path, depth-1, pattern, re_pattern, onerror)
+            if sub_list != -1:
+                path_list.extend(sub_list)
+            continue
+        if pattern and not fnmatch.fnmatch(filename, pattern):
+            continue
+        if re_pattern and not re.findall(re_pattern, filename):
+            continue
+        path_list.append(path)
 
-        # 开始检索
-        file_list = []
-        for name in dir_list:
-            # 把目录名和文件名合成一个子路径
-            sub_path = os.path.join(path, name)
-
-            # 如果子路径是一个文件夹且depth!=0，就递归调用本函数进入该文件夹检索，即深度优先搜索
-            if depth != 0 and os.path.isdir(sub_path) == True:
-                sub_list = __searchFile(sub_path, suffix, depth-1)
-                if sub_list != -1:
-                    file_list.extend(sub_list)  # 在file_list末尾增加一个列表
-
-            # 如果子路径是一个文件，就判断后缀名是否正确，如果没输入suffix就不考虑后缀名
-            elif suffix == None or sub_path.endswith(suffix):
-                file_list.append(sub_path)  # 在file_list末尾增加一个字符串
-
-        return file_list
-
-    return __searchFile(path, suffix, depth)
+    return path_list
 
 
 def locate_path(basedir: str, path: str) -> str:
     """
-    Locate the `path` relative to `basedir`, returns its absolute path.
+    Locate the relative `path` to the `basedir`.
 
     Sample:
     >>> locate_path('/root/', './1.py')
@@ -84,3 +83,4 @@ def locate_path(basedir: str, path: str) -> str:
         return path
     # Return the located path
     return os.path.abspath(os.path.join(basedir, path))
+
