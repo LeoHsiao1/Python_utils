@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-关于字典。
-  - def `sort_dict`
-  - def `flat_key`
-  - def `flat_dict`
+关于字典
 """
 
 def sort_dict(_dict):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-记录日志。
-  - class `Logger`
+记录日志
 """
 
 import time

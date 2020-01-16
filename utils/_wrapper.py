@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-一些装饰器。
-  - def `debug`
-  - def `retry`
-  - def `validator`
+一些装饰器
 """
 
 import time

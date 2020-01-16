@@ -1,5 +1,4 @@
 from utils._io import Inputs
-from utils._os import searchFile
+from utils._os import find_file
 
-searchFile(".")
-
+find_file('.', pattern='*.py')

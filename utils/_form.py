@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 读写csv、xlsx表格。
-  - def `read_csv`
-  - def `write_csv`
-  - def `read_xlsx`
-  - def `write_xlsx`
+读写xlsx表格时需要安装：pip install openpyxl
 """
 
 

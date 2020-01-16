@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+访问Jenkins的API。
+需要安装：pip install jenkinsapi
+"""
 from jenkinsapi.jenkins import Jenkins
 import time
 

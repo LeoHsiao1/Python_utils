@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-与终端交互。
-  - class `Inputs`
-  - def `print_text`
+与终端交互
 """
 
 import os
