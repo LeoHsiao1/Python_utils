@@ -36,13 +36,13 @@ def replace(string, src: str, dst: str) -> str:
         pattern = re.compile('({})'.format(src), re.A)
         result = string[:]
         for match in pattern.findall(string):
+            _dst = dst[:]
             for i in dst_group_ids:
                 i = int(i)
-                dst = dst.replace('${}'.format(i), match[i])
-            result = result.replace(match[0], dst)
+                _dst = _dst.replace('${}'.format(i), match[i])
+            result = result.replace(match[0], _dst)
     else:
         pattern = re.compile(src, re.A)
         result = pattern.sub(dst, string)
 
     return result
-
